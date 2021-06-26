@@ -1,0 +1,15 @@
+Resources:
+  Webhook:
+    Type: 'AWS::CodePipeline::Webhook'
+    Properties:
+      AuthenticationConfiguration:
+        SecretToken: '{{ resolve:secretsmanager:MyGitHubSecret:SecretString:token }}'
+      Filters:
+        - JsonPath: "$.ref"
+          MatchEquals: refs/heads/{Branch}
+      Authentication: GITHUB_HMAC
+      TargetPipeline: webhook
+      TargetAction: Build
+      Name: MyWebhook
+      TargetPipelineVersion: 1
+      RegisterWithThirdParty: 'true'
